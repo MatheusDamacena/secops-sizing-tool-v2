@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Tokens de tema — resolvidos por data-theme no <html>
+   ============================================================ */
+:root,
+html[data-theme='light'] {
+  --bg: #eef1f6;
+  --panel: #ffffff;
+  --panel-alt: #f6f8fb;
+  --line: #e3e8f0;
+  --line-soft: #eef1f6;
+  --line-2: #cfd6e2;
+  --primary: #2563eb;
+  --primary-2: #1d4ed8;
+  --purple: #7c3aed;
+  --pink: #db2777;
+  --amber: #b45309;
+  --destructive: #dc2626;
+  --text: #0f172a;
+  --text-dim: #48546a;
+  --text-faint: #8a95a8;
+}
+
+html[data-theme='dark'] {
+  --bg: #0b0f17;
+  --panel: #131a27;
+  --panel-alt: #1a2331;
+  --line: #263042;
+  --line-soft: #1a2331;
+  --line-2: #374151;
+  --primary: #3b82f6;
+  --primary-2: #2563eb;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --amber: #fbbf24;
+  --destructive: #f87171;
+  --text: #e7ecf3;
+  --text-dim: #a9b4c6;
+  --text-faint: #7a8698;
+}
+
+html {
+  transition: background-color 0.25s ease;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Remove spinners de input number */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Scrollbar sutil */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 6px;
+}
+
+/* Acessibilidade: foco visível consistente */
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Motion com propósito, respeitando preferência do usuário */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Impressão do relatório */
+@media print {
+  .app-chrome {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  .report-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+}
