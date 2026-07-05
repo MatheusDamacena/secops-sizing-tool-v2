@@ -49,4 +49,12 @@ describe('App (renderização)', () => {
     expect(screen.getByText('Azure')).toBeTruthy();
     expect(screen.getByText('Google Cloud')).toBeTruthy();
   });
+
+  it('abre a calculadora rápida e converte 500 GB/dia', () => {
+    render(<App />);
+    fireEvent.click(screen.getByText('Calculadora rápida'));
+    // título do modal + resultado padrão (500 GB/dia = 182,5 TB/ano)
+    expect(screen.getAllByText('Calculadora rápida').length).toBeGreaterThan(1);
+    expect(screen.getByText(/182,5/)).toBeTruthy();
+  });
 });

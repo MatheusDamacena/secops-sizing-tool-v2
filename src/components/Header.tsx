@@ -7,6 +7,7 @@ interface HeaderProps {
   onToggleReport: () => void;
   reportOpen: boolean;
   onOpenCloudGuide: () => void;
+  onOpenQuickCalc: () => void;
 }
 
 export function Header({
@@ -16,6 +17,7 @@ export function Header({
   onToggleReport,
   reportOpen,
   onOpenCloudGuide,
+  onOpenQuickCalc,
 }: HeaderProps) {
   return (
     <header className="app-chrome sticky top-0 z-30 border-b border-line bg-panel shadow-[0_1px_3px_rgba(15,23,42,.04)]">
@@ -37,6 +39,34 @@ export function Header({
         </div>
 
         <div className="flex-1" />
+
+        <button
+          type="button"
+          onClick={onOpenQuickCalc}
+          className="flex h-[38px] items-center gap-2 rounded-[10px] border border-line bg-panel-alt px-4 text-[12.5px] font-medium text-text-dim transition-colors hover:border-primary hover:text-primary"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="4" y="2" width="16" height="20" rx="2" />
+            <line x1="8" y1="6" x2="16" y2="6" />
+            <line x1="8" y1="10" x2="8" y2="10" />
+            <line x1="12" y1="10" x2="12" y2="10" />
+            <line x1="16" y1="10" x2="16" y2="10" />
+            <line x1="8" y1="14" x2="8" y2="14" />
+            <line x1="12" y1="14" x2="12" y2="14" />
+            <line x1="16" y1="14" x2="16" y2="18" />
+            <line x1="8" y1="18" x2="12" y2="18" />
+          </svg>
+          Calculadora rápida
+        </button>
 
         <button
           type="button"
