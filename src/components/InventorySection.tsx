@@ -20,12 +20,11 @@ export function InventorySection({ api }: { api: SizingApi }) {
       <table className="w-full table-fixed border-collapse">
         <thead>
           <tr>
-            <Th className="w-[27%]">Fonte</Th>
-            <Th className="w-[10%]">Qtd.</Th>
-            <Th className="w-[18%]">MB/dia</Th>
-            <Th className="w-[18%]">Fator raw</Th>
-            <Th className="w-[16%] text-right">GB/dia</Th>
-            <Th className="w-[11%]"> </Th>
+            <Th className="w-[30%]">Fonte</Th>
+            <Th className="w-[12%]">Qtd.</Th>
+            <Th className="w-[22%]">MB/dia</Th>
+            <Th className="w-[20%] text-right">GB/dia</Th>
+            <Th className="w-[12%]"> </Th>
           </tr>
         </thead>
         <tbody>
@@ -46,20 +45,21 @@ export function InventorySection({ api }: { api: SizingApi }) {
 
         <details className="mt-3.5">
           <summary className="cursor-pointer list-none rounded-[9px] border border-line bg-panel-alt px-[13px] py-2.5 text-[11.5px] font-medium text-primary">
-            O que é o "Fator raw"? · como funciona o cálculo
+            O que é o "MB/dia"? · como funciona o cálculo
           </summary>
           <div className="mt-2 rounded-[9px] border border-line bg-panel-alt px-4 py-3.5 text-[11.5px] leading-relaxed text-text-dim">
-            O <b>MB/dia/item</b> é o volume-base típico de mercado para aquele tipo de fonte em config
-            padrão. O <b>fator</b> multiplica esse valor para refletir verbosidade adicional, diferença
-            entre "somente alertas" e "telemetria completa", overhead de metadados do forwarder ou
-            config específica do fabricante. <b>Fator 1.00x = usar o MB/dia/item como está.</b> São
-            estimativas — sobrescreva com dado real do cliente sempre que possível.
+            O <b>MB/dia</b> é o volume diário típico que aquele tipo de fonte gera por item, com base
+            em referências de mercado e já considerando a verbosidade usual daquela tecnologia. O
+            GB/dia de cada linha é <b>quantidade × MB/dia ÷ 1024</b>, e todas as linhas são somadas de
+            forma independente (sem médias ponderadas). São estimativas de referência, então edite o
+            MB/dia com o valor real do cliente sempre que possível (a linha fica destacada em âmbar
+            como "dado real"). Para fontes de nuvem, meça o volume no console do provider e cole aqui.
           </div>
         </details>
 
         <details className="mt-2.5">
           <summary className="cursor-pointer list-none rounded-[9px] border border-line bg-panel-alt px-[13px] py-2.5 text-[11.5px] font-medium text-purple">
-            Ver o racional por fonte — por que esse fator específico?
+            Ver o racional por fonte: como esses valores foram estimados
           </summary>
           <div className="mt-2 max-h-[380px] overflow-y-auto rounded-[9px] border border-line bg-panel-alt p-4">
             {METHOD_GROUPS.map((g) => (
@@ -69,7 +69,7 @@ export function InventorySection({ api }: { api: SizingApi }) {
                 </div>
                 {g.rows.map((m) => (
                   <div key={m.term} className="mb-[7px] text-[11px] leading-relaxed text-text-dim">
-                    <b className="text-text">{m.term}</b> — {m.desc}
+                    <b className="text-text">{m.term}</b>: {m.desc}
                   </div>
                 ))}
               </div>
@@ -142,19 +142,8 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
           type="number"
           min={0}
           step={1}
-          value={mb}
-          onChange={(e) => api.overrideRow(index, 'mb', parseFloat(e.target.value) || 0)}
-          onFocus={(e) => e.target.select()}
-          className={`${cellInput} ${overrideCls}`}
-        />
-      </td>
-      <td className="px-2 py-2 align-top">
-        <input
-          type="number"
-          min={0}
-          step={0.05}
-          value={factor}
-          onChange={(e) => api.overrideRow(index, 'factor', parseFloat(e.target.value) || 0)}
+          value={Number((mb * factor).toFixed(2))}
+          onChange={(e) => api.overrideMbEffective(index, parseFloat(e.target.value) || 0)}
           onFocus={(e) => e.target.select()}
           className={`${cellInput} ${overrideCls}`}
         />

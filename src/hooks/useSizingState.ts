@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { CATALOG, DEFAULT_ROWS, EDR_KEY, SAAS_KEY } from '@/data/catalog';
-import { computeResult, resolveMbFactor } from '@/lib/sizing';
+import { computeResult } from '@/lib/sizing';
 import type {
   EdrMode,
   EpsType,
@@ -43,7 +43,7 @@ export interface SizingApi {
   changeRowName: (index: number, name: string) => void;
   changeRowQty: (index: number, qty: number) => void;
   changeRowCustomLabel: (index: number, label: string) => void;
-  overrideRow: (index: number, field: 'mb' | 'factor', value: number) => void;
+  overrideMbEffective: (index: number, effectiveMb: number) => void;
   resetRow: (index: number) => void;
   // global
   reset: () => void;
@@ -93,23 +93,18 @@ export function useSizingState(): SizingApi {
     [patchRows],
   );
 
-  const overrideRow = useCallback(
-    (index: number, field: 'mb' | 'factor', value: number) => {
-      setState((prev) => {
-        const rows = prev.rows.map((r, i) => {
-          if (i !== index) return r;
-          // Na primeira edição, congela o valor efetivo atual antes de aplicar a mudança.
-          if (!r.override) {
-            const current = resolveMbFactor(r, prev.edrMode, prev.saasMode);
-            return { ...r, mb: current.mb, factor: current.factor, override: true, [field]: value };
-          }
-          return { ...r, [field]: value };
-        });
-        return { ...prev, rows };
+  const overrideMbEffective = useCallback((index: number, effectiveMb: number) => {
+    setState((prev) => {
+      const rows = prev.rows.map((r, i) => {
+        if (i !== index) return r;
+        // O usuário edita o MB/dia EFETIVO (já com verbosidade embutida).
+        // Guardamos como mb = valor efetivo e factor = 1, porque a decomposição
+        // base×fator do catálogo não se aplica mais a uma medição manual.
+        return { ...r, mb: effectiveMb, factor: 1, override: true };
       });
-    },
-    [],
-  );
+      return { ...prev, rows };
+    });
+  }, []);
 
   const resetRow = useCallback(
     (index: number) => {
@@ -147,7 +142,7 @@ export function useSizingState(): SizingApi {
     changeRowName,
     changeRowQty,
     changeRowCustomLabel,
-    overrideRow,
+    overrideMbEffective,
     resetRow,
     reset,
   };

@@ -40,6 +40,14 @@ describe('resolveMbFactor', () => {
     const row: SourceRow = { name: EDR_KEY, qty: 1, override: true, mb: 999, factor: 2 };
     expect(resolveMbFactor(row, 'full', 'padrao')).toEqual({ mb: 999, factor: 2 });
   });
+
+  it('override de MB efetivo (factor 1) reflete o valor exato editado', () => {
+    // Simula o que overrideMbEffective grava: mb = efetivo, factor = 1.
+    const row: SourceRow = { name: 'Windows Workstation', qty: 200, override: true, mb: 40, factor: 1 };
+    // Sem override seria 10 × 1.75 = 17.5; com override manual, é exatamente 40.
+    expect(resolveMbFactor(row, 'mod', 'padrao')).toEqual({ mb: 40, factor: 1 });
+    expect(rowGbDay(row, 'mod', 'padrao')).toBeCloseTo((200 * 40 * 1) / 1024, 5);
+  });
 });
 
 describe('rowGbDay', () => {

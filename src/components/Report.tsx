@@ -177,7 +177,7 @@ export function Report({ api }: { api: SizingApi }) {
             )}
             <tr>
               <td className="bg-[#1e293b] px-2 py-2 text-[9px] font-semibold text-white">
-                TOTAL — {state.rows.length} fonte{state.rows.length !== 1 ? 's' : ''}
+                TOTAL: {state.rows.length} fonte{state.rows.length !== 1 ? 's' : ''}
                 {result.tbFlow > 0 ? ' + flow' : ''}
               </td>
               <td className="bg-[#1e293b]" />
@@ -193,7 +193,7 @@ export function Report({ api }: { api: SizingApi }) {
         </table>
 
         <div className="mt-5 flex justify-between border-t border-[#eef0f4] pt-3.5 text-[8px] text-[#94a3b8]">
-          <span>Estimativas de referência de mercado · Volume = qtd × MB/dia/item × fator ÷ 1024 · 1 TB = 1024 GB</span>
+          <span>Estimativas de referência de mercado · Volume = qtd × MB/dia ÷ 1024 · 1 TB = 1024 GB</span>
           <span>SecMath // Sizing Engine</span>
         </div>
       </div>

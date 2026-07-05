@@ -24,7 +24,7 @@ export function ContextSection({ api }: { api: SizingApi }) {
         <div>
           <label className={labelCls}>
             EPS real observado no SIEM{' '}
-            <span className="font-normal text-text-faint">— cross-check, opcional</span>
+            <span className="font-normal text-text-faint">(cross-check, opcional)</span>
           </label>
           <input
             type="number"
@@ -49,7 +49,7 @@ export function ContextSection({ api }: { api: SizingApi }) {
         <div>
           <label className={labelCls}>
             Telemetria do EDR / XDR / AV{' '}
-            <span className="font-normal text-text-faint">— afeta essa linha</span>
+            <span className="font-normal text-text-faint">(afeta essa linha)</span>
           </label>
           <div className="flex gap-1.5">
             <SegButton variant="purple" active={state.edrMode === 'alert'} onClick={() => api.setEdrMode('alert')}>

@@ -187,22 +187,22 @@ function buildAssumptions(state: SizingState): string[] {
       ? 'sustentado/uso real'
       : epsType === 'licenca'
         ? 'licença/contratado (risco de superestimar)'
-        : 'não confirmado — validar antes de fechar';
+        : 'não confirmado, validar antes de fechar';
 
   const flowLabel =
     flowIncluded === 'sim'
       ? 'já incluso no EPS, não somado à parte'
       : flowIncluded === 'nao'
         ? 'tratado como fonte separada do EPS'
-        : 'não confirmado — validar no QRadar (Network Activity / FPM)';
+        : 'não confirmado, validar no QRadar (Network Activity / FPM)';
 
   return [
     `EPS tratado como ${epsLabel}.`,
     `Flow de rede ${flowLabel}.`,
-    `EDR/XDR/AV em modo ${EDR_MODES[edrMode].label} — confirmar com o cliente o nível real configurado no console.`,
+    `EDR/XDR/AV em modo ${EDR_MODES[edrMode].label}. Confirmar com o cliente o nível real configurado no console.`,
     `SaaS (M365/Workspace) em modo ${SAAS_MODES[saasMode].label}.`,
-    `Cálculo aditivo por fonte (não médias ponderadas) — evita que uma fonte com contagem muito alta distorça o total.`,
-    `Fator de ajuste raw assume ingestão bruta sem filtro — padrão de billing do Google SecOps, salvo Data Processing Pipelines (Enterprise/Enterprise Plus).`,
+    `Cálculo aditivo por fonte (não médias ponderadas), o que evita que uma fonte com contagem muito alta distorça o total.`,
+    `Fator de ajuste raw assume ingestão bruta sem filtro, que é o padrão de billing do Google SecOps, salvo Data Processing Pipelines (Enterprise/Enterprise Plus).`,
     `EPS real usado só como cross-check de consistência, não como driver do cálculo.`,
     `Verificar se há fontes adicionais no ambiente não listadas no inventário.`,
   ];

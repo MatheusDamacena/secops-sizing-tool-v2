@@ -38,4 +38,15 @@ describe('App (renderização)', () => {
     // o resultado deixa de ser vazio (não deve mais mostrar a mensagem de empty state)
     expect(screen.queryByText(/Preencha as quantidades/)).toBeNull();
   });
+
+  it('abre o guia de cloud e mostra os providers', () => {
+    render(<App />);
+    fireEvent.click(screen.getByText('Como medir logs da cloud'));
+    // título do modal
+    expect(screen.getAllByText('Como medir logs da cloud').length).toBeGreaterThan(1);
+    // abas dos três providers
+    expect(screen.getByText('AWS')).toBeTruthy();
+    expect(screen.getByText('Azure')).toBeTruthy();
+    expect(screen.getByText('Google Cloud')).toBeTruthy();
+  });
 });

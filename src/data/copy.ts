@@ -4,17 +4,17 @@ import type { EpsType, FlowIncluded } from '@/types/sizing';
 export const EPS_TYPE_ADVISORY: Record<EpsType, string> = {
   sustentado: '',
   licenca:
-    'Atenção: EPS de licença costuma rodar 40-70% acima do uso real sustentado (headroom de dimensionamento). O cálculo usa o valor informado como se fosse sustentado — considere pedir o gráfico de utilização real do License Manager antes de fechar a cotação.',
+    'Atenção: EPS de licença costuma rodar 40-70% acima do uso real sustentado (headroom de dimensionamento). O cálculo usa o valor informado como se fosse sustentado. Considere pedir o gráfico de utilização real do License Manager antes de fechar a cotação.',
   naosei:
-    'Confirme com o cliente antes de fechar a cotação — essa é a variável que mais muda o resultado final, mais do que qualquer ajuste de catálogo.',
+    'Confirme com o cliente antes de fechar a cotação, porque essa é a variável que mais muda o resultado final, mais do que qualquer ajuste de catálogo.',
 };
 
 /** Avisos exibidos conforme a resposta sobre flow incluso no EPS. */
 export const FLOW_INCLUDED_ADVISORY: Record<FlowIncluded, string> = {
   nao: '',
-  sim: 'Se o EPS já inclui flow, NÃO preencha o campo de flow abaixo — somar os dois causaria dupla contagem do mesmo tráfego.',
+  sim: 'Se o EPS já inclui flow, NÃO preencha o campo de flow abaixo, porque somar os dois causaria dupla contagem do mesmo tráfego.',
   naosei:
-    'Se for QRadar: verifique a aba "Network Activity" e a métrica FPM em System and License Management — se houver valor ali, o flow é coletado separado do log (EPS). Se for outro SIEM, procure a métrica equivalente de flow/registros por minuto na licença ou no dashboard de ingestão.',
+    'Se for QRadar: verifique a aba "Network Activity" e a métrica FPM em System and License Management. Se houver valor ali, o flow é coletado separado do log (EPS). Se for outro SIEM, procure a métrica equivalente de flow/registros por minuto na licença ou no dashboard de ingestão.',
 };
 
 /** Racional dos fatores de ajuste, agrupado por categoria (para o expander). */
@@ -66,7 +66,7 @@ export const METHOD_GROUPS: MethodGroup[] = [
       { term: 'Hypervisor (1.10x)', desc: 'log de gerenciamento é relativamente enxuto e padronizado.' },
       { term: 'Cloud IaaS (1.30x)', desc: 'logs de audit de nuvem (tipo CloudTrail) representam cada chamada de API, tendem a ser mais verbosos que a média.' },
       { term: 'Cloud PaaS (1.20x)', desc: 'similar ao IaaS, mas volume de chamadas por serviço tende a ser um pouco menor.' },
-      { term: 'Kubernetes/Container (1.20x)', desc: 'audit log de API do cluster é um dos mais verbosos do catálogo — cada chamada é um evento JSON detalhado.' },
+      { term: 'Kubernetes/Container (1.20x)', desc: 'audit log de API do cluster é um dos mais verbosos do catálogo, já que cada chamada é um evento JSON detalhado.' },
       { term: 'Email/Exchange (1.20x)', desc: 'inclui metadados de roteamento/anexo além do fluxo básico.' },
       { term: 'Email Security Gateway (1.15x)', desc: 'inclui resultado de varredura de anexo/URL, mais verboso que o fluxo simples do Exchange.' },
       { term: 'MDM/UEM (1.15x)', desc: 'compacto, mas pode variar com frequência de check-in do dispositivo.' },
@@ -80,7 +80,7 @@ export const METHOD_GROUPS: MethodGroup[] = [
       { term: 'ZTNA (1.15x)', desc: 'log de sessão com contexto de dispositivo/postura é mais rico que VPN tradicional.' },
       { term: 'Sandbox (1.20x)', desc: 'relatório de análise comportamental pode incluir múltiplos artefatos por amostra.' },
       { term: 'Vulnerability Management / Threat Intel (1.10x)', desc: 'resultado de scan e feed de IOC são relativamente estruturados e compactos.' },
-      { term: 'Asset & Identity Feeds (1.10x)', desc: 'dado de enriquecimento, não evento contínuo — volume inerentemente baixo.' },
+      { term: 'Asset & Identity Feeds (1.10x)', desc: 'dado de enriquecimento, não evento contínuo, então volume inerentemente baixo.' },
       { term: 'CASB (1.20x)', desc: 'inspeção de conteúdo/contexto de aplicação SaaS aumenta volume por evento.' },
       { term: 'OT/IoT (1.20x)', desc: 'protocolos industriais são compactos, mas gateways modernos podem agregar telemetria adicional.' },
       { term: 'Telecom (1.10x)', desc: 'CDR e eventos de sessão são relativamente padronizados.' },

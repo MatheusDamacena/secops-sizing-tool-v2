@@ -50,7 +50,7 @@ export function ResultRail({ api }: { api: SizingApi }) {
 
         {result.isEmpty && (
           <div className="mt-3 rounded-[9px] bg-black/[.12] px-[11px] py-[9px] text-[10.5px] leading-relaxed text-white/[.85]">
-            Preencha as quantidades no inventário — o resultado aparece aqui em tempo real.
+            Preencha as quantidades no inventário e o resultado aparece aqui em tempo real.
           </div>
         )}
       </div>

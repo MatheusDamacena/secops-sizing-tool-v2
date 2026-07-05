@@ -6,9 +6,17 @@ interface HeaderProps {
   onReset: () => void;
   onToggleReport: () => void;
   reportOpen: boolean;
+  onOpenCloudGuide: () => void;
 }
 
-export function Header({ theme, onToggleTheme, onReset, onToggleReport, reportOpen }: HeaderProps) {
+export function Header({
+  theme,
+  onToggleTheme,
+  onReset,
+  onToggleReport,
+  reportOpen,
+  onOpenCloudGuide,
+}: HeaderProps) {
   return (
     <header className="app-chrome sticky top-0 z-30 border-b border-line bg-panel shadow-[0_1px_3px_rgba(15,23,42,.04)]">
       <div className="mx-auto flex max-w-[1240px] items-center gap-4 px-7 py-3">
@@ -29,6 +37,26 @@ export function Header({ theme, onToggleTheme, onReset, onToggleReport, reportOp
         </div>
 
         <div className="flex-1" />
+
+        <button
+          type="button"
+          onClick={onOpenCloudGuide}
+          className="flex h-[38px] items-center gap-2 rounded-[10px] border border-line bg-panel-alt px-4 text-[12.5px] font-medium text-text-dim transition-colors hover:border-primary hover:text-primary"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M17.5 19a4.5 4.5 0 1 0 0-9h-1.8A7 7 0 1 0 4 15.9" />
+          </svg>
+          Como medir logs da cloud
+        </button>
 
         <button
           type="button"
