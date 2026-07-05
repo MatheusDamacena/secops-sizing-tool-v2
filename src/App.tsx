@@ -31,6 +31,15 @@ export function App() {
       </main>
 
       {reportOpen && <Report api={api} />}
+
+      <footer className="app-chrome mx-auto max-w-[1240px] px-7 pb-10 pt-2">
+        <p className="border-t border-line pt-5 text-center text-[11.5px] leading-relaxed text-text-faint">
+          Estimativa de pré-venda para fins de dimensionamento inicial. Baseada em valores de
+          referência de mercado — o volume real de ingestão pode variar conforme configuração,
+          verbosidade e sazonalidade do ambiente. O dimensionamento final deve ser confirmado por
+          meio de um piloto de ingestão real antes de qualquer decisão de licenciamento.
+        </p>
+      </footer>
     </div>
   );
 }
