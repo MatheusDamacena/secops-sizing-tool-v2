@@ -8,13 +8,26 @@ import { CloudGuideModal } from './components/CloudGuideModal';
 import { QuickCalcModal } from './components/QuickCalcModal';
 import { useSizingState } from './hooks/useSizingState';
 import { useTheme } from './hooks/useTheme';
+import { useI18n } from './i18n/context';
 
 export function App() {
   const api = useSizingState();
   const { theme, toggle } = useTheme();
+  const { t } = useI18n();
   const [reportOpen, setReportOpen] = useState(false);
   const [cloudGuideOpen, setCloudGuideOpen] = useState(false);
   const [quickCalcOpen, setQuickCalcOpen] = useState(false);
+  const [toast, setToast] = useState<{ msg: string; kind: 'ok' | 'err' } | null>(null);
+
+  const handleImport = (text: string) => {
+    try {
+      api.importFromText(text);
+      setToast({ msg: t('header.importSuccess'), kind: 'ok' });
+    } catch {
+      setToast({ msg: t('header.importError'), kind: 'err' });
+    }
+    setTimeout(() => setToast(null), 4000);
+  };
 
   return (
     <div className="min-h-screen bg-bg text-text">
@@ -26,10 +39,12 @@ export function App() {
         reportOpen={reportOpen}
         onOpenCloudGuide={() => setCloudGuideOpen(true)}
         onOpenQuickCalc={() => setQuickCalcOpen(true)}
+        onExport={api.exportToFile}
+        onImportText={handleImport}
       />
 
-      <main className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-[26px] px-7 pb-16 pt-[26px] lg:grid-cols-[minmax(0,1.62fr)_minmax(340px,1fr)]">
-        <div className="flex min-w-0 flex-col gap-[22px]">
+      <main className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-4 px-4 pb-16 pt-4 sm:gap-[26px] sm:px-7 sm:pt-[26px] lg:grid-cols-[minmax(0,1.62fr)_minmax(340px,1fr)]">
+        <div className="flex min-w-0 flex-col gap-4 sm:gap-[22px]">
           <ContextSection api={api} />
           <InventorySection api={api} />
         </div>
@@ -42,12 +57,23 @@ export function App() {
 
       {quickCalcOpen && <QuickCalcModal onClose={() => setQuickCalcOpen(false)} />}
 
-      <footer className="app-chrome mx-auto max-w-[1240px] px-7 pb-10 pt-2">
+      {toast && (
+        <div
+          role="status"
+          className={[
+            'app-chrome fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[10px] border px-4 py-3 text-[12.5px] font-medium shadow-lg',
+            toast.kind === 'ok'
+              ? 'border-primary bg-primary text-white'
+              : 'border-destructive bg-destructive text-white',
+          ].join(' ')}
+        >
+          {toast.msg}
+        </div>
+      )}
+
+      <footer className="app-chrome mx-auto max-w-[1240px] px-4 pb-10 pt-2 sm:px-7">
         <p className="border-t border-line pt-5 text-center text-[11.5px] leading-relaxed text-text-faint">
-          Estimativa de pré-venda para fins de dimensionamento inicial. Baseada em valores de
-          referência de mercado. O volume real de ingestão pode variar conforme configuração,
-          verbosidade e sazonalidade do ambiente. O dimensionamento final deve ser confirmado por
-          meio de um piloto de ingestão real antes de qualquer decisão de licenciamento.
+          {t('footer.disclaimer')}
         </p>
       </footer>
     </div>

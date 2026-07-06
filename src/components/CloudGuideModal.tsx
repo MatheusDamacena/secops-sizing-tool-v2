@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { CLOUD_GUIDE, CLOUD_GUIDE_INTRO } from '@/data/cloudGuide';
+import { CLOUD_GUIDE } from '@/data/cloudGuide';
+import { useI18n } from '@/i18n/context';
 
 interface CloudGuideModalProps {
   onClose: () => void;
 }
 
 export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
+  const { t, lang } = useI18n();
   const [active, setActive] = useState(CLOUD_GUIDE[0].id);
   const provider = CLOUD_GUIDE.find((p) => p.id === active) ?? CLOUD_GUIDE[0];
 
@@ -21,16 +23,15 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
           <div>
-            <h2 className="text-[16px] font-semibold text-text">Como medir logs da cloud</h2>
+            <h2 className="text-[16px] font-semibold text-text">{t('cloud.title')}</h2>
             <p className="mt-1 text-[12px] leading-relaxed text-text-dim">
-              Para nuvem, meça o volume real no console do provider e sobrescreva o MB/dia da linha
-              no inventário, em vez de estimar por unidade.
+              {t('cloud.subtitle')}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label={t('common.close')}
             className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-line bg-panel-alt text-[18px] text-text-faint transition-colors hover:border-destructive hover:text-destructive"
           >
             ×
@@ -39,7 +40,7 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
 
         <div className="px-6 py-5">
           <p className="mb-5 rounded-[10px] border border-line bg-panel-alt px-4 py-3 text-[12px] leading-relaxed text-text-dim">
-            {CLOUD_GUIDE_INTRO}
+            {t('cloud.intro')}
           </p>
 
           {/* Abas de provider */}
@@ -62,11 +63,11 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
           </div>
 
           {/* Conteúdo do provider ativo */}
-          <p className="text-[12.5px] leading-relaxed text-text-dim">{provider.intro}</p>
+          <p className="text-[12.5px] leading-relaxed text-text-dim">{provider.intro[lang]}</p>
 
           <div className="mt-4 rounded-[10px] border border-line bg-panel-alt px-4 py-3">
             <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint">
-              Onde encontrar
+              {t('cloud.whereToFind')}
             </div>
             <div className="mt-1 font-mono text-[12px] text-primary">{provider.path}</div>
           </div>
@@ -77,7 +78,7 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)]/12 text-[11px] font-semibold text-primary">
                   {i + 1}
                 </span>
-                <span>{s.text}</span>
+                <span>{s.text[lang]}</span>
               </li>
             ))}
           </ol>
@@ -85,7 +86,7 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
           {provider.query && (
             <div className="mt-4">
               <div className="mb-1.5 text-[11px] font-medium text-text-dim">
-                {provider.query.label}
+                {provider.query.label[lang]}
               </div>
               <pre className="overflow-x-auto rounded-[10px] border border-line bg-[#0b0f17] px-4 py-3 font-mono text-[11px] leading-relaxed text-[#c9d4e5]">
                 {provider.query.code}
@@ -95,7 +96,7 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
 
           <div className="mt-5 border-t border-line pt-4">
             <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint">
-              Documentação oficial ({provider.name})
+              {t('cloud.officialDocs')} ({provider.name})
             </div>
             <div className="flex flex-col gap-1.5">
               {provider.docs.map((d) => (
@@ -106,16 +107,14 @@ export function CloudGuideModal({ onClose }: CloudGuideModalProps) {
                   rel="noopener noreferrer"
                   className="text-[12px] text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
                 >
-                  {d.label} ↗
+                  {d.label[lang]} ↗
                 </a>
               ))}
             </div>
           </div>
 
           <p className="mt-5 text-[11px] leading-relaxed text-text-faint">
-            As telas e caminhos são mantidos pelos próprios providers e podem mudar sem aviso. Este
-            guia é informativo, então sempre confirme na documentação oficial acima. Os números medidos
-            são de responsabilidade do provider e do ambiente do cliente.
+            {t('cloud.disclaimer')}
           </p>
         </div>
       </div>

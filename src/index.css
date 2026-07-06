@@ -100,9 +100,27 @@ a:focus-visible {
 
 /* Impressão do relatório */
 @media print {
+  /* Estratégia: esconde TUDO, depois revela apenas o relatório.
+     Mais robusto que esconder peça por peça (o <main> escapava antes). */
+  body * {
+    visibility: hidden !important;
+  }
+  .report-print-area,
+  .report-print-area * {
+    visibility: visible !important;
+  }
+  .report-print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Elementos de chrome (toolbar do relatório, botões) somem de vez */
   .app-chrome {
     display: none !important;
   }
+
   body {
     background: #fff !important;
   }
@@ -110,5 +128,30 @@ a:focus-visible {
     box-shadow: none !important;
     margin: 0 !important;
     border: none !important;
+    padding: 24px 32px !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  /* Força o layout de documento A4, mesmo se gerado a partir de um celular */
+  .report-metrics {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+  .report-metric-featured {
+    grid-column: span 1 !important;
+  }
+  .report-composition {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+  .report-table-wrap {
+    overflow-x: visible !important;
+  }
+  .report-table-wrap table {
+    min-width: 0 !important;
+  }
+
+  @page {
+    margin: 12mm;
+    size: A4;
   }
 }

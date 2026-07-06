@@ -1,30 +1,32 @@
 import { Donut } from './Donut';
 import type { SizingApi } from '@/hooks/useSizingState';
+import { useI18n } from '@/i18n/context';
 
 export function ResultRail({ api }: { api: SizingApi }) {
   const { state, result } = api;
+  const { t } = useI18n();
 
   return (
-    <aside className="sticky top-[82px] flex flex-col gap-4">
+    <aside className="flex flex-col gap-4 lg:sticky lg:top-[82px]">
       {/* Card de resultado (gradiente) */}
       <div className="rounded-[18px] bg-gradient-to-br from-primary to-primary-2 p-[22px_22px_20px] text-white shadow-result">
         <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/[.72]">
-          Número final da cotação
+          {t('rail.finalLabel')}
         </div>
         <div className="mt-2 flex items-baseline gap-2">
           <div className="font-mono text-[46px] font-bold leading-none tracking-tight">
             {result.tbGrowth.toFixed(1)}
           </div>
-          <div className="text-[15px] font-semibold text-white/[.82]">TB/ano</div>
+          <div className="text-[15px] font-semibold text-white/[.82]">{t('rail.tbYear')}</div>
         </div>
         <div className="mt-1 text-[11.5px] text-white/[.75]">
-          Volume total com margem de crescimento aplicada
+          {t('rail.finalDesc')}
         </div>
 
         {/* Slider de margem */}
         <div className="mt-4">
           <div className="mb-[7px] flex justify-between text-[11px] font-medium text-white/[.82]">
-            <span>Margem de crescimento</span>
+            <span>{t('rail.growthMargin')}</span>
             <span className="font-mono">{state.growth}%</span>
           </div>
           <input
@@ -41,16 +43,16 @@ export function ResultRail({ api }: { api: SizingApi }) {
 
         {/* Breakdown log + flow = total */}
         <div className="mt-4 flex items-center gap-2">
-          <MiniStat value={result.tbLog.toFixed(1)} label="Log" />
+          <MiniStat value={result.tbLog.toFixed(1)} label={t('rail.log')} />
           <span className="font-mono text-[15px] text-white/60">+</span>
-          <MiniStat value={result.tbFlow.toFixed(1)} label="Flow" />
+          <MiniStat value={result.tbFlow.toFixed(1)} label={t('rail.flow')} />
           <span className="font-mono text-[15px] text-white/60">=</span>
-          <MiniStat value={result.tbBase.toFixed(1)} label="Total" highlight />
+          <MiniStat value={result.tbBase.toFixed(1)} label={t('rail.total')} highlight />
         </div>
 
         {result.isEmpty && (
           <div className="mt-3 rounded-[9px] bg-black/[.12] px-[11px] py-[9px] text-[10.5px] leading-relaxed text-white/[.85]">
-            Preencha as quantidades no inventário e o resultado aparece aqui em tempo real.
+            {t('rail.emptyState')}
           </div>
         )}
       </div>
@@ -58,7 +60,7 @@ export function ResultRail({ api }: { api: SizingApi }) {
       {/* Composição por categoria */}
       <div className="rounded-2xl border border-line bg-panel p-[18px] shadow-[0_1px_2px_rgba(15,23,42,.04)]">
         <div className="mb-3.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-text-dim">
-          Composição por categoria
+          {t('rail.composition')}
         </div>
         <div className="flex items-center gap-4">
           <Donut
@@ -87,7 +89,7 @@ export function ResultRail({ api }: { api: SizingApi }) {
               ))
             ) : (
               <div className="text-[11px] leading-relaxed text-text-faint">
-                A composição aparece aqui conforme você preenche o inventário.
+                {t('rail.compositionEmpty')}
               </div>
             )}
           </div>
@@ -97,9 +99,9 @@ export function ResultRail({ api }: { api: SizingApi }) {
       {/* Sensibilidade + premissas */}
       <div className="rounded-2xl border border-line bg-panel p-[18px] shadow-[0_1px_2px_rgba(15,23,42,.04)]">
         <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-text-dim">
-          Sensibilidade{' '}
+          {t('rail.sensitivity')}{' '}
           <span className="font-normal normal-case tracking-normal text-text-faint">
-            (±10% / ±20% no volume)
+            {t('rail.sensitivityHint')}
           </span>
         </div>
         <div className="flex flex-col gap-0.5">
@@ -126,7 +128,7 @@ export function ResultRail({ api }: { api: SizingApi }) {
         </div>
         <details className="mt-3">
           <summary className="cursor-pointer list-none py-2 text-[11px] font-medium text-text-dim">
-            Premissas assumidas ({result.assumptions.length})
+            {t('rail.assumptions')} ({result.assumptions.length})
           </summary>
           <ul className="m-0 mt-1.5 flex list-none flex-col gap-2 p-0">
             {result.assumptions.map((a, i) => (

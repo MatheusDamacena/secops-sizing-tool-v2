@@ -1,12 +1,17 @@
 import { CATEGORY_MAP } from '@/data/catalog';
 import { donutArcs, flowGbDay, resolveMbFactor } from '@/lib/sizing';
 import type { SizingApi } from '@/hooks/useSizingState';
+import { useI18n } from '@/i18n/context';
 
 /** Relatório imprimível. Paleta própria fixa (documento sempre claro). */
+// i18n
+const DATE_LOCALE: Record<string, string> = { pt: 'pt-BR', es: 'es-ES', en: 'en-US' };
+
 export function Report({ api }: { api: SizingApi }) {
+  const { t, lang } = useI18n();
   const { state, result } = api;
   const today = new Date();
-  const dateStr = today.toLocaleDateString('pt-BR', {
+  const dateStr = today.toLocaleDateString(DATE_LOCALE[lang] ?? 'pt-BR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -28,8 +33,8 @@ export function Report({ api }: { api: SizingApi }) {
       <div className="app-chrome mb-4 flex items-center justify-end gap-2.5">
         <input
           type="text"
-          placeholder="Nome do projeto/cliente"
-          value={state.projName === 'Sem nome de projeto' ? '' : state.projName}
+          placeholder={t('common.projectName')}
+          value={state.projName}
           onChange={(e) => api.setProjName(e.target.value)}
           className="w-[240px] rounded-[9px] border border-line bg-panel px-[11px] py-[9px] text-[12.5px] text-text outline-none focus:border-primary"
         />
@@ -43,12 +48,12 @@ export function Report({ api }: { api: SizingApi }) {
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
             <rect x="6" y="14" width="12" height="8" />
           </svg>
-          Imprimir / Salvar PDF
+          {t('report.printButton')}
         </button>
       </div>
 
       <div
-        className="report-page mx-auto max-w-[860px] rounded-lg border border-[#eef0f4] bg-white p-[52px_56px_40px] text-[#1a1a2e] shadow-[0_4px_24px_rgba(15,23,42,.10)]"
+        className="report-page report-print-area mx-auto max-w-[860px] rounded-lg border border-[#eef0f4] bg-white p-5 text-[#1a1a2e] shadow-[0_4px_24px_rgba(15,23,42,.10)] sm:p-[52px_56px_40px]"
         style={{ fontFamily: 'Inter, sans-serif' }}
       >
         {/* Header */}
@@ -64,12 +69,14 @@ export function Report({ api }: { api: SizingApi }) {
                 SecOps Sizing Tool
               </div>
               <div className="mt-0.5 font-mono text-[10px] text-[#64748b]">
-                Relatório de dimensionamento de ingestão
+{t('report.headerSubtitle')}
               </div>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-[13px] font-semibold text-[#1e293b]">{state.projName}</div>
+            <div className="text-[13px] font-semibold text-[#1e293b]">
+              {state.projName || t('report.noProject')}
+            </div>
             <div className="mt-[3px] font-mono text-[10px] text-[#64748b]">{dateStr}</div>
             <div className="mt-0.5 font-mono text-[9px] text-[#94a3b8]">SecMath // Sizing Engine</div>
           </div>
@@ -78,20 +85,26 @@ export function Report({ api }: { api: SizingApi }) {
         <Divider />
 
         {/* Resumo executivo */}
-        <SectionLabel>Resumo executivo</SectionLabel>
-        <div className="grid grid-cols-5 gap-2.5">
-          <Metric label="Fontes" value={String(state.rows.length)} />
-          <Metric label="GB / dia" value={gbDia.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} />
-          <Metric label="GB / mês" value={(gbDia * 30).toLocaleString('pt-BR', { maximumFractionDigits: 0 })} />
-          <Metric label="Margem" value={`${state.growth}%`} />
-          <Metric label="TB/ano (cotação)" value={result.tbGrowth.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} featured />
+        <SectionLabel>{t('report.executiveSummary')}</SectionLabel>
+        <div className="grid grid-cols-2 gap-2.5 report-metrics sm:grid-cols-5">
+          <Metric label={t('report.metricSources')} value={String(state.rows.length)} />
+          <Metric label={t('report.metricGbDay')} value={gbDia.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} />
+          <Metric label={t('report.metricGbMonth')} value={(gbDia * 30).toLocaleString('pt-BR', { maximumFractionDigits: 0 })} />
+          <Metric label={t('report.metricMargin')} value={`${state.growth}%`} />
+          <div className="col-span-2 sm:col-span-1 report-metric-featured">
+            <Metric
+              label={t('report.metricTbYear')}
+              value={result.tbGrowth.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
+              featured
+            />
+          </div>
         </div>
 
         <Divider />
 
         {/* Composição */}
-        <SectionLabel>Composição por categoria</SectionLabel>
-        <div className="flex items-center gap-[30px]">
+        <SectionLabel>{t('report.composition')}</SectionLabel>
+        <div className="flex flex-col items-center gap-4 report-composition sm:flex-row sm:items-center sm:gap-[30px]">
           <div className="relative h-[140px] w-[140px] flex-shrink-0">
             <svg width="140" height="140" viewBox="0 0 140 140">
               {arcs.map((a, i) => (
@@ -116,7 +129,7 @@ export function Report({ api }: { api: SizingApi }) {
               <div className="mt-0.5 text-[9px] text-[#64748b]">TB/ano</div>
             </div>
           </div>
-          <div className="flex-1">
+          <div className="w-full flex-1">
             {result.categorySlices.map((s) => (
               <div
                 key={s.category}
@@ -138,15 +151,16 @@ export function Report({ api }: { api: SizingApi }) {
         <Divider />
 
         {/* Tabela detalhada */}
-        <SectionLabel>Detalhamento por fonte</SectionLabel>
-        <table className="w-full border-collapse text-[10px]">
+        <SectionLabel>{t('report.detailBySource')}</SectionLabel>
+        <div className="overflow-x-auto report-table-wrap">
+          <table className="w-full min-w-[420px] border-collapse text-[10px]">
           <thead>
             <tr>
-              <RptTh>Fonte</RptTh>
-              <RptTh right>Qtd.</RptTh>
-              <RptTh right>MB/dia</RptTh>
-              <RptTh right>GB/dia</RptTh>
-              <RptTh right>TB/ano</RptTh>
+              <RptTh>{t('report.colSource')}</RptTh>
+              <RptTh right>{t('report.colQty')}</RptTh>
+              <RptTh right>{t('report.colMbDay')}</RptTh>
+              <RptTh right>{t('report.colGbDay')}</RptTh>
+              <RptTh right>{t('report.colTbYear')}</RptTh>
             </tr>
           </thead>
           <tbody>
@@ -157,7 +171,7 @@ export function Report({ api }: { api: SizingApi }) {
               <>
                 <tr>
                   <td colSpan={5} className="bg-[#f8fafc] px-2 py-1.5 text-[9px] font-semibold uppercase tracking-[0.03em] text-[#64748b]">
-                    Flow de rede
+                    {t('report.flowRow')}
                   </td>
                 </tr>
                 <tr>
@@ -177,7 +191,7 @@ export function Report({ api }: { api: SizingApi }) {
             )}
             <tr>
               <td className="bg-[#1e293b] px-2 py-2 text-[9px] font-semibold text-white">
-                TOTAL: {state.rows.length} fonte{state.rows.length !== 1 ? 's' : ''}
+                {t('report.total')}: {t('report.totalSources', { n: state.rows.length })}
                 {result.tbFlow > 0 ? ' + flow' : ''}
               </td>
               <td className="bg-[#1e293b]" />
@@ -190,10 +204,11 @@ export function Report({ api }: { api: SizingApi }) {
               </td>
             </tr>
           </tbody>
-        </table>
+          </table>
+        </div>
 
-        <div className="mt-5 flex justify-between border-t border-[#eef0f4] pt-3.5 text-[8px] text-[#94a3b8]">
-          <span>Estimativas de referência de mercado · Volume = qtd × MB/dia ÷ 1024 · 1 TB = 1024 GB</span>
+        <div className="mt-5 flex flex-col gap-1 border-t border-[#eef0f4] pt-3.5 text-[8px] text-[#94a3b8] sm:flex-row sm:justify-between sm:gap-0">
+          <span>{t('report.footer')}</span>
           <span>SecMath // Sizing Engine</span>
         </div>
       </div>

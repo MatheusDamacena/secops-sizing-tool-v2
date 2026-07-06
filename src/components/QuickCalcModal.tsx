@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { QUICK_UNITS, quickCalc, quickCalcMemo, type QuickUnit } from '@/lib/quickCalc';
+import { useI18n } from '@/i18n/context';
 
 interface QuickCalcModalProps {
   onClose: () => void;
@@ -12,6 +13,7 @@ const labelCls =
 const hintCls = 'mt-1 text-[11px] text-text-faint';
 
 export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
+  const { t } = useI18n();
   const [value, setValue] = useState('500');
   const [unit, setUnit] = useState<QuickUnit>('GB_per_day');
   const [daysPerYear, setDaysPerYear] = useState(365);
@@ -69,15 +71,15 @@ export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
       >
         <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
           <div>
-            <h2 className="text-[16px] font-semibold text-text">Calculadora rápida</h2>
+            <h2 className="text-[16px] font-semibold text-text">{t('quick.title')}</h2>
             <p className="mt-1 text-[12px] leading-relaxed text-text-dim">
-              Converta qualquer taxa de ingestão para TB/ano (base decimal, 1 TB = 10¹² bytes).
+              {t('quick.desc')}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label={t('common.close')}
             className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-line bg-panel-alt text-[18px] text-text-faint transition-colors hover:border-destructive hover:text-destructive"
           >
             ×
@@ -87,19 +89,19 @@ export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
         <div className="px-6 py-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className={labelCls}>Valor de entrada</label>
+              <label className={labelCls}>{t('quick.valueLabel')}</label>
               <input
                 type="number"
                 min={0}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 onFocus={(e) => e.target.select()}
-                placeholder="Ex.: 500 GB/dia, 1000 EPS…"
+                placeholder={t('quick.valuePlaceholder')}
                 className={fieldCls}
               />
             </div>
             <div>
-              <label className={labelCls}>Unidade / taxa</label>
+              <label className={labelCls}>{t('quick.unitLabel')}</label>
               <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value as QuickUnit)}
@@ -111,14 +113,14 @@ export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
                   </option>
                 ))}
               </select>
-              <div className={hintCls}>Resultado sempre em TB/ano.</div>
+              <div className={hintCls}>{t('quick.resultInTb')}</div>
             </div>
           </div>
 
           {isEps && (
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className={labelCls}>Tamanho médio do evento (bytes)</label>
+                <label className={labelCls}>{t('quick.eventBytes')}</label>
                 <input
                   type="number"
                   min={0}
@@ -127,10 +129,10 @@ export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
                   onFocus={(e) => e.target.select()}
                   className={fieldCls}
                 />
-                <div className={hintCls}>Firewall ~400–800B · EDR ~1200–1800B.</div>
+                <div className={hintCls}>{t('quick.eventBytesHint')}</div>
               </div>
               <div>
-                <label className={labelCls}>Fator overhead</label>
+                <label className={labelCls}>{t('quick.overhead')}</label>
                 <input
                   type="number"
                   min={0}
@@ -140,51 +142,50 @@ export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
                   onFocus={(e) => e.target.select()}
                   className={fieldCls}
                 />
-                <div className={hintCls}>Headers, metadata. 1.0 = sem overhead.</div>
+                <div className={hintCls}>{t('quick.overheadHint')}</div>
               </div>
             </div>
           )}
 
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className={labelCls}>Dias no ano</label>
+              <label className={labelCls}>{t('quick.daysYear')}</label>
               <select
                 value={daysPerYear}
                 onChange={(e) => setDaysPerYear(Number(e.target.value))}
                 className={fieldCls}
               >
-                <option value={365}>365 dias</option>
-                <option value={366}>366 dias (bissexto)</option>
+                <option value={365}>{t('quick.days365')}</option>
+                <option value={366}>{t('quick.days366')}</option>
               </select>
-              <div className={hintCls}>Para estimativa padrão, use 365.</div>
+              <div className={hintCls}>{t('quick.daysYearHint')}</div>
             </div>
             {isMonthly && (
               <div>
-                <label className={labelCls}>Dias por mês</label>
+                <label className={labelCls}>{t('quick.daysMonth')}</label>
                 <select
                   value={daysPerMonth}
                   onChange={(e) => setDaysPerMonth(Number(e.target.value))}
                   className={fieldCls}
                 >
-                  <option value={30}>30 dias / mês</option>
-                  <option value={30.4375}>30,4375 (média anual)</option>
+                  <option value={30}>{t('quick.days30')}</option>
+                  <option value={30.4375}>{t('quick.days304')}</option>
                 </select>
-                <div className={hintCls}>Relevante apenas para unidades mensais.</div>
+                <div className={hintCls}>{t('quick.daysMonthHint')}</div>
               </div>
             )}
           </div>
 
           {isEps && (
             <div className="mt-4 rounded-[10px] border border-[color:var(--amber)]/25 bg-[color:var(--amber)]/[.08] px-3.5 py-2.5 text-[11.5px] leading-relaxed text-amber">
-              EPS é estimativa: o tamanho real do evento varia bastante por fonte. Use como ordem de
-              grandeza, não como número fechado.
+              {t('quick.epsWarning')}
             </div>
           )}
 
           {/* Resultado */}
           <div className="mt-5 rounded-[12px] bg-gradient-to-br from-primary to-primary-2 p-5 text-white">
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/[.72]">
-              Resultado
+              {t('quick.result')}
             </div>
             <div className="mt-1.5 font-mono text-[32px] font-bold leading-none">
               {result.tbPerYear.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}
@@ -203,14 +204,14 @@ export function QuickCalcModal({ onClose }: QuickCalcModalProps) {
               onClick={copy}
               className="flex-1 rounded-[10px] bg-primary px-4 py-2.5 text-[12.5px] font-semibold text-white transition-opacity hover:opacity-90"
             >
-              {copied ? '✓ Copiado' : 'Copiar resultado'}
+              {copied ? t('quick.copied') : t('quick.copy')}
             </button>
             <button
               type="button"
               onClick={reset}
               className="rounded-[10px] border border-line bg-panel-alt px-5 py-2.5 text-[12.5px] font-medium text-text-dim transition-colors hover:border-primary hover:text-primary"
             >
-              Reset
+              {t('quick.reset')}
             </button>
           </div>
         </div>

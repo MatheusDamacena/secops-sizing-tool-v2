@@ -4,35 +4,39 @@ import { METHOD_GROUPS } from '@/data/copy';
 import { resolveMbFactor } from '@/lib/sizing';
 import type { SizingApi } from '@/hooks/useSizingState';
 import type { SourceRow } from '@/types/sizing';
+import { useI18n } from '@/i18n/context';
 
 const catalogKeys = Object.keys(CATALOG);
 
 export function InventorySection({ api }: { api: SizingApi }) {
   const { state } = api;
+  const { t } = useI18n();
 
   return (
     <SectionCard
       num={2}
-      title="Inventário de fontes"
-      desc="GB/dia por fonte = qtd × MB/dia/item × fator raw, somado. Edite MB/dia ou fator para sobrescrever com dado real."
+      title={t('inv.title')}
+      desc={t('inv.desc')}
       bodyClassName="px-[14px] pb-[18px] pt-1.5"
     >
-      <table className="w-full table-fixed border-collapse">
-        <thead>
-          <tr>
-            <Th className="w-[30%]">Fonte</Th>
-            <Th className="w-[12%]">Qtd.</Th>
-            <Th className="w-[22%]">MB/dia</Th>
-            <Th className="w-[20%] text-right">GB/dia</Th>
-            <Th className="w-[12%]"> </Th>
-          </tr>
-        </thead>
-        <tbody>
-          {state.rows.map((row, i) => (
-            <InventoryRow key={i} row={row} index={i} api={api} />
-          ))}
-        </tbody>
-      </table>
+      <div className="-mx-2 overflow-x-auto px-2">
+        <table className="w-full min-w-[480px] table-fixed border-collapse">
+          <thead>
+            <tr>
+              <Th className="w-[28%]">{t('inv.colSource')}</Th>
+              <Th className="w-[17%]">{t('inv.colQty')}</Th>
+              <Th className="w-[21%]">{t('inv.colMb')}</Th>
+              <Th className="w-[20%] text-right">{t('inv.colGb')}</Th>
+              <Th className="w-[14%]"> </Th>
+            </tr>
+          </thead>
+          <tbody>
+            {state.rows.map((row, i) => (
+              <InventoryRow key={i} row={row} index={i} api={api} />
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="px-2 pt-1">
         <button
@@ -40,26 +44,21 @@ export function InventorySection({ api }: { api: SizingApi }) {
           onClick={api.addRow}
           className="mt-1 w-full rounded-[11px] border border-dashed border-line-2 bg-transparent px-3 py-[11px] font-mono text-[12px] text-text-dim transition-colors hover:border-primary hover:text-primary"
         >
-          + adicionar fonte
+          {t('inv.addRow')}
         </button>
 
         <details className="mt-3.5">
           <summary className="cursor-pointer list-none rounded-[9px] border border-line bg-panel-alt px-[13px] py-2.5 text-[11.5px] font-medium text-primary">
-            O que é o "MB/dia"? · como funciona o cálculo
+            {t('inv.mbExplainerTitle')}
           </summary>
           <div className="mt-2 rounded-[9px] border border-line bg-panel-alt px-4 py-3.5 text-[11.5px] leading-relaxed text-text-dim">
-            O <b>MB/dia</b> é o volume diário típico que aquele tipo de fonte gera por item, com base
-            em referências de mercado e já considerando a verbosidade usual daquela tecnologia. O
-            GB/dia de cada linha é <b>quantidade × MB/dia ÷ 1024</b>, e todas as linhas são somadas de
-            forma independente (sem médias ponderadas). São estimativas de referência, então edite o
-            MB/dia com o valor real do cliente sempre que possível (a linha fica destacada em âmbar
-            como "dado real"). Para fontes de nuvem, meça o volume no console do provider e cole aqui.
+            {t('inv.mbExplainerBody')}
           </div>
         </details>
 
         <details className="mt-2.5">
           <summary className="cursor-pointer list-none rounded-[9px] border border-line bg-panel-alt px-[13px] py-2.5 text-[11.5px] font-medium text-purple">
-            Ver o racional por fonte: como esses valores foram estimados
+            {t('inv.rationaleTitle')}
           </summary>
           <div className="mt-2 max-h-[380px] overflow-y-auto rounded-[9px] border border-line bg-panel-alt p-4">
             {METHOD_GROUPS.map((g) => (
@@ -92,6 +91,7 @@ function Th({ children, className = '' }: { children: React.ReactNode; className
 }
 
 function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api: SizingApi }) {
+  const { t } = useI18n();
   const { mb, factor } = resolveMbFactor(row, api.state.edrMode, api.state.saasMode);
   const gbDay = (row.qty * mb * factor) / 1024;
   const isOutro = row.name === 'Outro';
@@ -120,7 +120,7 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
         {isOutro && (
           <input
             type="text"
-            placeholder="Nome personalizado"
+            placeholder={t('inv.customPlaceholder')}
             value={row.customLabel ?? ''}
             onChange={(e) => api.changeRowCustomLabel(index, e.target.value)}
             className="mt-[5px] w-full rounded-lg border border-line bg-panel-alt px-2 py-1.5 text-[11.5px] text-text-dim outline-none focus:border-primary"
@@ -152,7 +152,7 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
         <span className="font-mono text-[13px] font-semibold text-primary">{gbDay.toFixed(2)}</span>
         {overridden && (
           <div className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.04em] text-amber">
-            dado real
+            {t('inv.realData')}
           </div>
         )}
       </td>
@@ -162,7 +162,7 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
             <button
               type="button"
               onClick={() => api.resetRow(index)}
-              title="Voltar ao padrão de catálogo"
+              title={t('inv.resetRow')}
               className="flex h-[30px] w-[26px] items-center justify-center rounded-[7px] border border-amber bg-transparent text-[13px] text-amber"
             >
               ↺
@@ -171,7 +171,7 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
           <button
             type="button"
             onClick={() => api.removeRow(index)}
-            title="Remover"
+            title={t('inv.removeRow')}
             className="flex h-[30px] w-[26px] items-center justify-center rounded-[7px] border border-line bg-transparent text-[15px] text-text-faint transition-colors hover:border-destructive hover:text-destructive"
           >
             ×
