@@ -1,10 +1,12 @@
 import { Donut } from './Donut';
 import type { SizingApi } from '@/hooks/useSizingState';
 import { useI18n } from '@/i18n/context';
+import { evaluateSanity } from '@/lib/sanity';
 
 export function ResultRail({ api }: { api: SizingApi }) {
   const { state, result } = api;
   const { t } = useI18n();
+  const sanityAlerts = evaluateSanity(state, result);
 
   return (
     <aside className="flex flex-col gap-4 lg:sticky lg:top-[82px]">
@@ -56,6 +58,29 @@ export function ResultRail({ api }: { api: SizingApi }) {
           </div>
         )}
       </div>
+
+      {/* Alertas de sanidade (guardrails) — não bloqueiam, apenas avisam */}
+      {sanityAlerts.length > 0 && (
+        <div className="rounded-2xl border border-[color:var(--amber)]/30 bg-[color:var(--amber)]/[.06] p-4">
+          <div className="mb-2.5 flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.05em] text-amber">
+              {t('sanity.title')}
+            </span>
+          </div>
+          <ul className="m-0 flex list-none flex-col gap-2 p-0">
+            {sanityAlerts.map((a) => (
+              <li key={a.id} className="text-[11.5px] leading-relaxed text-text-dim">
+                {t(a.messageKey as Parameters<typeof t>[0], a.vars)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Composição por categoria */}
       <div className="rounded-2xl border border-line bg-panel p-[18px] shadow-[0_1px_2px_rgba(15,23,42,.04)]">

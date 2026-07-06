@@ -13,6 +13,7 @@ interface HeaderProps {
   onOpenQuickCalc: () => void;
   onExport: () => void;
   onImportText: (text: string) => void;
+  onOpenHelp: () => void;
 }
 
 export function Header({
@@ -25,6 +26,7 @@ export function Header({
   onOpenQuickCalc,
   onExport,
   onImportText,
+  onOpenHelp,
 }: HeaderProps) {
   const { t } = useI18n();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +61,21 @@ export function Header({
         </div>
 
         <div className="flex-1" />
+
+        <button
+          type="button"
+          onClick={onOpenHelp}
+          aria-label={t('help.button')}
+          title={t('help.button')}
+          className="flex h-[38px] items-center gap-2 rounded-[10px] border border-primary/40 bg-[color:var(--primary)]/[.08] px-2.5 text-[12.5px] font-medium text-primary transition-colors hover:bg-[color:var(--primary)]/[.14] sm:px-4"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span className="hidden sm:inline">{t('help.button')}</span>
+        </button>
 
         <button
           type="button"

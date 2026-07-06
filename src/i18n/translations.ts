@@ -142,6 +142,27 @@ export const pt = {
   'report.total': 'TOTAL',
   'report.totalSources': '{n} fonte(s)',
   'report.footer': 'Estimativas de referência de mercado · Volume = qtd × MB/dia ÷ 1024 · 1 TB = 1024 GB',
+
+  // Guardrails de sanidade
+  'sanity.title': 'Verificações de sanidade',
+  'sanity.bytesLow': 'O dimensionamento implica {value} bytes/evento, abaixo da faixa usual (a partir de {min}). Pode indicar subdimensionamento ou EPS superestimado. Revise as fontes e o EPS informado.',
+  'sanity.bytesHigh': 'O dimensionamento implica {value} bytes/evento, acima da faixa usual (até {max}). Pode indicar superdimensionamento ou EPS subestimado, ou um ambiente legitimamente muito verboso. Confirme.',
+  'sanity.dominance': 'A categoria {category} representa {pct}% do volume total. Se não for esperado, confirme as quantidades dessa categoria.',
+  'sanity.qtyExtreme': 'Quantidade muito alta ({qty}) na fonte {name}. Confirme se o número está correto.',
+
+  // Onboarding / como usar
+  'help.button': 'Como usar',
+  'help.title': 'Como usar esta ferramenta',
+  'help.intro': 'Esta é uma ferramenta de estimativa de pré-venda para dimensionar a ingestão do Google SecOps. O número que ela produz é um ponto de partida para cotação, não um dimensionamento final.',
+  'help.point1Title': 'É estimativa, não cotação final',
+  'help.point1': 'Os valores do catálogo são referências de mercado. O volume real varia com configuração, verbosidade e sazonalidade. O dimensionamento final deve ser confirmado por um piloto de ingestão real (POC).',
+  'help.point2Title': 'Meça o que puder, não estime tudo',
+  'help.point2': 'Sempre que tiver o dado real do cliente, sobrescreva o MB/dia da linha (fica destacado em âmbar). Para fontes de nuvem, meça o volume no console do provider, não estime por unidade.',
+  'help.point3Title': 'Use o EPS como cross-check',
+  'help.point3': 'Ao informar o EPS real, a ferramenta calcula o bytes/evento implícito. Se ele ficar muito fora da faixa usual (cerca de 150 a 2000 bytes/evento), é sinal de sub ou superdimensionamento. Os avisos em âmbar apontam isso.',
+  'help.point4Title': 'Interprete, não apenas colete o número',
+  'help.point4': 'A ferramenta acelera e dá consistência ao trabalho de quem entende de dimensionamento. Ela não substitui o julgamento técnico: leia os avisos, questione resultados estranhos e valide com o cliente.',
+  'help.gotIt': 'Entendi',
 } as const;
 
 export type TranslationKey = keyof typeof pt;
@@ -271,6 +292,25 @@ export const es: Record<TranslationKey, string> = {
   'report.total': 'TOTAL',
   'report.totalSources': '{n} fuente(s)',
   'report.footer': 'Estimaciones de referencia de mercado · Volumen = cant. × MB/día ÷ 1024 · 1 TB = 1024 GB',
+
+  'sanity.title': 'Verificaciones de sanidad',
+  'sanity.bytesLow': 'El dimensionamiento implica {value} bytes/evento, por debajo del rango usual (desde {min}). Puede indicar subdimensionamiento o EPS sobrestimado. Revise las fuentes y el EPS informado.',
+  'sanity.bytesHigh': 'El dimensionamiento implica {value} bytes/evento, por encima del rango usual (hasta {max}). Puede indicar sobredimensionamiento o EPS subestimado, o un entorno legítimamente muy verbose. Confirme.',
+  'sanity.dominance': 'La categoría {category} representa {pct}% del volumen total. Si no es lo esperado, confirme las cantidades de esa categoría.',
+  'sanity.qtyExtreme': 'Cantidad muy alta ({qty}) en la fuente {name}. Confirme si el número es correcto.',
+
+  'help.button': 'Cómo usar',
+  'help.title': 'Cómo usar esta herramienta',
+  'help.intro': 'Esta es una herramienta de estimación de preventa para dimensionar la ingesta de Google SecOps. El número que produce es un punto de partida para la cotización, no un dimensionamiento final.',
+  'help.point1Title': 'Es estimación, no cotización final',
+  'help.point1': 'Los valores del catálogo son referencias de mercado. El volumen real varía según configuración, verbosidad y estacionalidad. El dimensionamiento final debe confirmarse con un piloto de ingesta real (POC).',
+  'help.point2Title': 'Mida lo que pueda, no estime todo',
+  'help.point2': 'Siempre que tenga el dato real del cliente, sobrescriba el MB/día de la línea (se resalta en ámbar). Para fuentes de nube, mida el volumen en la consola del proveedor, no estime por unidad.',
+  'help.point3Title': 'Use el EPS como cross-check',
+  'help.point3': 'Al informar el EPS real, la herramienta calcula el bytes/evento implícito. Si queda muy fuera del rango usual (cerca de 150 a 2000 bytes/evento), es señal de sub o sobredimensionamiento. Los avisos en ámbar lo indican.',
+  'help.point4Title': 'Interprete, no solo recoja el número',
+  'help.point4': 'La herramienta acelera y da consistencia al trabajo de quien entiende de dimensionamiento. No sustituye el juicio técnico: lea los avisos, cuestione resultados extraños y valide con el cliente.',
+  'help.gotIt': 'Entendido',
 };
 
 export const en: Record<TranslationKey, string> = {
@@ -398,6 +438,25 @@ export const en: Record<TranslationKey, string> = {
   'report.total': 'TOTAL',
   'report.totalSources': '{n} source(s)',
   'report.footer': 'Market reference estimates · Volume = qty × MB/day ÷ 1024 · 1 TB = 1024 GB',
+
+  'sanity.title': 'Sanity checks',
+  'sanity.bytesLow': 'The sizing implies {value} bytes/event, below the usual range (from {min}). It may indicate undersizing or an overstated EPS. Review the sources and the reported EPS.',
+  'sanity.bytesHigh': 'The sizing implies {value} bytes/event, above the usual range (up to {max}). It may indicate oversizing or an understated EPS, or a legitimately very verbose environment. Confirm.',
+  'sanity.dominance': 'The {category} category represents {pct}% of the total volume. If this is not expected, confirm the quantities in that category.',
+  'sanity.qtyExtreme': 'Very high quantity ({qty}) in the {name} source. Confirm the number is correct.',
+
+  'help.button': 'How to use',
+  'help.title': 'How to use this tool',
+  'help.intro': 'This is a pre-sales estimation tool for sizing Google SecOps ingestion. The figure it produces is a starting point for a quote, not a final sizing.',
+  'help.point1Title': 'It is an estimate, not a final quote',
+  'help.point1': 'The catalog values are market references. Actual volume varies with configuration, verbosity, and seasonality. Final sizing must be confirmed with a real ingestion pilot (POC).',
+  'help.point2Title': 'Measure what you can, do not estimate everything',
+  'help.point2': "Whenever you have the client's real data, override the row's MB/day (it is highlighted in amber). For cloud sources, measure the volume in the provider console, do not estimate per unit.",
+  'help.point3Title': 'Use EPS as a cross-check',
+  'help.point3': 'When you enter the real EPS, the tool computes the implied bytes/event. If it falls well outside the usual range (about 150 to 2000 bytes/event), it signals under- or oversizing. The amber warnings point this out.',
+  'help.point4Title': 'Interpret, do not just collect the number',
+  'help.point4': 'The tool speeds up and adds consistency to the work of someone who understands sizing. It does not replace technical judgment: read the warnings, question strange results, and validate with the client.',
+  'help.gotIt': 'Got it',
 };
 
 export const DICTIONARIES: Record<Lang, Record<TranslationKey, string>> = { pt, es, en };

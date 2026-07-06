@@ -68,4 +68,11 @@ describe('App (renderização)', () => {
     expect(screen.getAllByText('Calculadora rápida').length).toBeGreaterThan(1);
     expect(screen.getByText(/182,5/)).toBeTruthy();
   });
+
+  it('abre o modal Como usar', () => {
+    renderApp();
+    fireEvent.click(screen.getByText('Como usar'));
+    expect(screen.getByText('Como usar esta ferramenta')).toBeTruthy();
+    expect(screen.getByText('Entendi')).toBeTruthy();
+  });
 });
