@@ -17,6 +17,17 @@ import type {
   SourceRow,
 } from '@/types/sizing';
 
+// Tetos máximos sensatos: generosos para não atrapalhar casos reais,
+// mas barram valores absurdos (incl. Infinity vindo de "1e999" colado).
+export const MAX_QTY = 10_000_000; // 10 milhões de itens por fonte
+export const MAX_MB = 5_000_000; // ~5 TB/dia por item
+
+/** Limita um número ao intervalo [0, max], tratando NaN/Infinity como 0. */
+function clamp(value: number, max: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.min(Math.max(0, value), max);
+}
+
 const initialState: SizingState = {
   eps: '',
   epsType: 'sustentado',
@@ -103,7 +114,7 @@ export function useSizingState(): SizingApi {
 
   const changeRowQty = useCallback(
     (index: number, qty: number) => {
-      const safe = Number.isFinite(qty) ? Math.max(0, qty) : 0;
+      const safe = clamp(qty, MAX_QTY);
       patchRows((rows) => rows.map((r, i) => (i === index ? { ...r, qty: safe } : r)));
     },
     [patchRows],
@@ -117,7 +128,7 @@ export function useSizingState(): SizingApi {
   );
 
   const overrideMbEffective = useCallback((index: number, effectiveMb: number) => {
-    const safe = Number.isFinite(effectiveMb) ? Math.max(0, effectiveMb) : 0;
+    const safe = clamp(effectiveMb, MAX_MB);
     setState((prev) => {
       const rows = prev.rows.map((r, i) => {
         if (i !== index) return r;

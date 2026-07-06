@@ -128,7 +128,9 @@ export function computeResult(state: SizingState): SizingResult {
   // Flow — só entra se não estiver incluso no EPS
   let tbFlow = 0;
   if (flowIncluded !== 'sim') {
-    const regMin = parseFloat(flowRegMin) || 0;
+    // Limita o flow a um teto sensato para não propagar Infinity/valores absurdos.
+    const regMinRaw = parseFloat(flowRegMin);
+    const regMin = Number.isFinite(regMinRaw) ? Math.min(Math.max(0, regMinRaw), 1e9) : 0;
     const bytesPerReg = parseFloat(flowFormat) || 150;
     tbFlow = flowTbYear(regMin, bytesPerReg);
   }
@@ -138,11 +140,13 @@ export function computeResult(state: SizingState): SizingResult {
   const tbGrowth = tbBase * growthMult;
 
   // Cross-check de EPS: bytes/evento implícito
-  const epsVal = parseFloat(eps);
+  const epsRaw = parseFloat(eps);
+  const epsVal = Number.isFinite(epsRaw) ? epsRaw : 0;
   let bytesImplied: number | null = null;
-  if (epsVal && epsVal > 0) {
+  if (epsVal > 0) {
     const eventsYear = epsVal * SECONDS_PER_DAY * DAYS_PER_YEAR;
-    bytesImplied = (tbBase * 1e12) / eventsYear;
+    const implied = (tbBase * 1e12) / eventsYear;
+    bytesImplied = Number.isFinite(implied) ? implied : null;
   }
 
   const { slices, total } = categoryBreakdown(rows, edrMode, saasMode, tbFlow, growthMult);

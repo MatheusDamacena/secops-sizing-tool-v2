@@ -73,6 +73,25 @@ describe('computeResult', () => {
     expect(result.tbBase).toBe(0);
   });
 
+  it('nunca produz Infinity, mesmo com flowRegMin absurdo (1e999)', () => {
+    const result = computeResult(
+      baseState({
+        rows: [{ name: 'Windows Server', qty: 10 }],
+        flowIncluded: 'nao',
+        flowRegMin: '1e999', // parseFloat vira Infinity
+      }),
+    );
+    expect(Number.isFinite(result.tbFlow)).toBe(true);
+    expect(Number.isFinite(result.tbGrowth)).toBe(true);
+  });
+
+  it('bytesImplied é null (não Infinity/NaN) com EPS absurdo', () => {
+    const result = computeResult(
+      baseState({ rows: [{ name: 'Windows Server', qty: 10 }], eps: '1e999' }),
+    );
+    expect(result.bytesImplied === null || Number.isFinite(result.bytesImplied)).toBe(true);
+  });
+
   it('aplica a margem de crescimento ao total', () => {
     const result = computeResult(
       baseState({ rows: [{ name: 'Windows Server', qty: 100 }], growth: 20 }),

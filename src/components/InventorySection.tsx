@@ -3,6 +3,7 @@ import { CATALOG } from '@/data/catalog';
 import { METHOD_GROUPS } from '@/data/copy';
 import { resolveMbFactor } from '@/lib/sizing';
 import type { SizingApi } from '@/hooks/useSizingState';
+import { MAX_MB, MAX_QTY } from '@/hooks/useSizingState';
 import type { SourceRow } from '@/types/sizing';
 import { useI18n } from '@/i18n/context';
 
@@ -131,6 +132,7 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
         <input
           type="number"
           min={0}
+          max={MAX_QTY}
           value={row.qty}
           onChange={(e) => api.changeRowQty(index, parseFloat(e.target.value) || 0)}
           onFocus={(e) => e.target.select()}
@@ -141,6 +143,7 @@ function InventoryRow({ row, index, api }: { row: SourceRow; index: number; api:
         <input
           type="number"
           min={0}
+          max={MAX_MB}
           step={1}
           value={Number((mb * factor).toFixed(2))}
           onChange={(e) => api.overrideMbEffective(index, parseFloat(e.target.value) || 0)}
